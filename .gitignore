@@ -1,0 +1,38 @@
+/deps/*
+!/deps/README.md
+/build/
+*.obj
+*.pdb
+imgui.ini
+/out/
+
+# Build trees and generated CMake files.
+/build-*/
+/cmake-build-*/
+/CMakeFiles/
+/CMakeCache.txt
+
+# Compiler and linker output.
+*.o
+*.lib
+*.a
+*.dll
+*.exe
+*.ilk
+*.exp
+*.idb
+
+# Local IDE and OS state.
+/.vs/
+/CMakeUserPresets.json
+*.user
+*.log
+Thumbs.db
+Desktop.ini
+
+# GLFW's upstream CI/editor/Git metadata is not needed to build the library.
+/third_party/glfw/.appveyor.yml
+/third_party/glfw/.editorconfig
+/third_party/glfw/.gitattributes
+/third_party/glfw/.gitignore
+/third_party/glfw/.mailmap

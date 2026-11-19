@@ -1,0 +1,15 @@
+# Stable text files and vendored-source hashes across Windows and Unix checkouts.
+* text=auto eol=lf
+
+# Windows entry points retain native line endings.
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Runtime assets must remain byte-for-byte intact.
+*.ttf binary
+*.png binary
+*.usdc binary
+*.hdr binary
+
+# Large, fixed warehouse benchmark scene.
+scenes/warehouseNoRoof.usd filter=lfs diff=lfs merge=lfs -text
