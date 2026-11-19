@@ -1,7 +1,7 @@
 #pragma once
 #include "Camera.h"
-#include "StageMesh.h"
 #include <cstdint>
+#include <ecm_ovstage/StageMesh.h>
 #include <functional>
 #include <memory>
 #include <string>
@@ -45,7 +45,7 @@ class RtxView
     const Camera *initialCamera() const;
     const std::string &path() const;
     // World-space triangles of the loaded stage, excluding the viewer's own prims.
-    StageTriangles extractTriangles() const;
+    ecm_ovstage::StageTriangles extractTriangles() const;
     // Root prim path that overlay layers should define their prims under.
     std::string overlayRoot() const;
     // Replaces the overlay layer (USDA text referenced onto the stage); empty removes it.

@@ -52,22 +52,7 @@ void stageWait(ovstage_instance_t *stage, ovstage_enqueue_result_t op)
         throw std::runtime_error(error);
 }
 
-void populationWait(ovstage_instance_t *stage, ovstage_population_enqueue_result_t op)
-{
-    if (op.status != OVSTAGE_OK)
-        throw std::runtime_error("USD load (status " + std::to_string(op.status) +
-                                 "): " + text(ovstage_population_get_last_error()));
-    ovstage_population_op_wait_result_t result{};
-    const auto status = ovstage_population_wait_op(stage, op.op_index, OVSTAGE_TIMEOUT_INFINITE, &result);
-    std::string error;
-    for (size_t i = 0; i < result.error_op_id_count; ++i)
-        error += text(ovstage_population_get_last_op_error(result.error_op_ids[i])) + "\n";
-    if (status != OVSTAGE_OK)
-        throw std::runtime_error("USD load wait (status " + std::to_string(status) + "): " + error +
-                                 text(ovstage_population_get_last_error()));
-    if (!error.empty())
-        throw std::runtime_error(error);
-}
+using stage::populationWait;
 
 template <class Result> void rtxCheck(Result result, const char *operation)
 {
@@ -142,7 +127,7 @@ struct Scene
     bool zUp = false;
     std::optional<StageCamera> initialCamera;
     std::string path;
-    ovstage_population_usd_reference_handle_t overlay = 0;
+    stage::ReferencedLayer overlay;
     ~Scene()
     {
         if (stage)
@@ -656,11 +641,11 @@ const std::string &RtxView::path() const
     static const std::string empty;
     return impl->scene ? impl->scene->path : empty;
 }
-StageTriangles RtxView::extractTriangles() const
+ecm_ovstage::StageTriangles RtxView::extractTriangles() const
 {
     if (!loaded())
         throw std::runtime_error("Load a stage first.");
-    return extractStageTriangles(impl->scene->stage, impl->scene->ordinal, impl->scene->viewerRoot);
+    return ecm_ovstage::extractStageTriangles(impl->scene->stage, impl->scene->ordinal, impl->scene->viewerRoot);
 }
 std::string RtxView::overlayRoot() const
 {
@@ -672,17 +657,7 @@ void RtxView::setOverlay(const std::string &layer)
     if (!loaded())
         return;
     Scene &scene = *impl->scene;
-    ovstage_population_usd_reference_handle_t added = 0;
-    if (!layer.empty())
-        populationWait(scene.stage,
-                       ovstage_population_add_usd_reference_from_string(scene.stage, str(layer), lit("/"), &added));
-    if (scene.overlay)
-    {
-        populationWait(scene.stage, ovstage_population_remove_usd_reference(scene.stage, scene.overlay));
-        scene.overlay = 0;
-    }
-    scene.overlay = added;
-    populationWait(scene.stage, ovstage_population_apply_usd_changes(scene.stage, ++scene.ordinal));
+    scene.overlay.replace(scene.stage, ++scene.ordinal, layer);
     scene.seal();
     stage::hierarchy(scene.stage, scene.ordinal);
     rtxWait(impl->renderer, ovrtx_update_from_stage(impl->renderer, scene.ordinal));

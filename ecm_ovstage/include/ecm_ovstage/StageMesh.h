@@ -3,7 +3,7 @@
 #include <ovstage/ovstage.h>
 #include <string>
 
-namespace viewer
+namespace ecm_ovstage
 {
 struct StageTriangles
 {
@@ -14,7 +14,8 @@ struct StageTriangles
 };
 
 // World-space triangles of every visible, non-guide gprim: meshes (fan-triangulated) and the
-// implicit Cube/Sphere/Cylinder/Cone/Capsule shapes, including native instances. Prims under
-// `skipRoot` (the viewer's own camera and overlays) are ignored.
+// implicit Cube/Sphere/Cylinder/Cone/Capsule shapes, including native instances. Reads world
+// matrices, so the hierarchy must be computed at `ordinal`. Prims under `skipRoot` (the host's
+// own camera and overlays) are ignored.
 StageTriangles extractStageTriangles(ovstage_instance_t *stage, ovstage_ordinal_t ordinal, const std::string &skipRoot);
-} // namespace viewer
+} // namespace ecm_ovstage

@@ -1,14 +1,13 @@
-#include "StageMesh.h"
-#include "StageData.h"
+#include <ecm_ovstage/StageMesh.h>
+#include <ecm_ovstage/StageData.h>
 #include <array>
 #include <cmath>
-#include <cstdio>
 #include <functional>
 #include <map>
 #include <set>
 #include <stdexcept>
 
-namespace viewer
+namespace ecm_ovstage
 {
 namespace
 {
@@ -260,10 +259,6 @@ StageTriangles extractStageTriangles(ovstage_instance_t *stageInstance, ovstage_
             }
     };
     place("", identity, 0);
-    std::printf("Stage geometry: %zu meshes, %zu shapes, %zu instances, %zu hidden, %zu triangles, %s-up, "
-                "%g m/unit\n",
-                result.meshes, result.primitives, result.instances, result.hidden, out.indices.size() / 3,
-                result.zUp ? "Z" : "Y", result.metersPerUnit);
     return result;
 }
-} // namespace viewer
+} // namespace ecm_ovstage

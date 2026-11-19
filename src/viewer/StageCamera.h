@@ -1,10 +1,12 @@
 #pragma once
 #include "Camera.h"
-#include "StageData.h"
+#include <ecm_ovstage/StageData.h>
 #include <optional>
 
 namespace viewer
 {
+namespace stage = ecm_ovstage::stage;
+
 inline constexpr const char *cameraAttributeNames[] = {"projection",
                                                        "focalLength",
                                                        "horizontalAperture",

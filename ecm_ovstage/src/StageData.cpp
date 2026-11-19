@@ -1,4 +1,4 @@
-#include "StageData.h"
+#include <ecm_ovstage/StageData.h>
 #include <algorithm>
 #include <cmath>
 #include <cstring>
@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <unordered_map>
 
-namespace viewer::stage
+namespace ecm_ovstage::stage
 {
 namespace
 {
@@ -148,6 +148,36 @@ void wait(ovstage_instance_t *stage, ovstage_enqueue_result_t op)
     if (!error.empty())
         throw std::runtime_error(error);
 }
+void populationWait(ovstage_instance_t *stage, ovstage_population_enqueue_result_t op)
+{
+    if (op.status != OVSTAGE_OK)
+        throw std::runtime_error("USD load (status " + std::to_string(op.status) +
+                                 "): " + text(ovstage_population_get_last_error()));
+    ovstage_population_op_wait_result_t result{};
+    const auto status = ovstage_population_wait_op(stage, op.op_index, OVSTAGE_TIMEOUT_INFINITE, &result);
+    std::string error;
+    for (size_t i = 0; i < result.error_op_id_count; ++i)
+        error += text(ovstage_population_get_last_op_error(result.error_op_ids[i])) + "\n";
+    if (status != OVSTAGE_OK)
+        throw std::runtime_error("USD load wait (status " + std::to_string(status) + "): " + error +
+                                 text(ovstage_population_get_last_error()));
+    if (!error.empty())
+        throw std::runtime_error(error);
+}
+void ReferencedLayer::replace(ovstage_instance_t *stage, ovstage_ordinal_t ordinal, const std::string &layer)
+{
+    ovstage_population_usd_reference_handle_t added = 0;
+    if (!layer.empty())
+        populationWait(stage, ovstage_population_add_usd_reference_from_string(stage, {layer.data(), layer.size()},
+                                                                              str("/"), &added));
+    if (handle)
+    {
+        populationWait(stage, ovstage_population_remove_usd_reference(stage, handle));
+        handle = 0;
+    }
+    handle = added;
+    populationWait(stage, ovstage_population_apply_usd_changes(stage, ordinal));
+}
 void seal(ovstage_instance_t *stage, ovstage_ordinal_t ordinal)
 {
     ovstage_write_floor_desc_t floor{};
@@ -255,4 +285,4 @@ Snapshot read(ovstage_instance_t *stage, ovstage_ordinal_t ordinal, const std::v
     wait(stage, ovstage_release_query(stage, query));
     return output;
 }
-} // namespace viewer::stage
+} // namespace ecm_ovstage::stage

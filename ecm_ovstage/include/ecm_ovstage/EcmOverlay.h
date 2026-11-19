@@ -2,7 +2,7 @@
 #include <ecm/Ecm.h>
 #include <string>
 
-namespace viewer
+namespace ecm_ovstage
 {
 struct EcmDisplay
 {
@@ -15,6 +15,7 @@ struct EcmDisplay
 };
 
 // USDA layer drawing the map as linear BasisCurves under `root` (an absolute prim path whose
-// parent the stage already defines), lifted slightly above the floor.
+// parent the stage already defines), lifted slightly above the floor. Plain text with no SDK
+// calls; stage::ReferencedLayer puts it on a stage.
 std::string ecmOverlayLayer(const ecm::Map &map, const EcmDisplay &display, const std::string &root);
-} // namespace viewer
+} // namespace ecm_ovstage

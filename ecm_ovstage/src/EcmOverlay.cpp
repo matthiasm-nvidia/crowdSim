@@ -1,11 +1,11 @@
-#include "EcmOverlay.h"
+#include <ecm_ovstage/EcmOverlay.h>
 #include <algorithm>
 #include <array>
 #include <cmath>
 #include <sstream>
 #include <vector>
 
-namespace viewer
+namespace ecm_ovstage
 {
 namespace
 {
@@ -182,4 +182,4 @@ std::string ecmOverlayLayer(const ecm::Map &map, const EcmDisplay &display, cons
         os << "}\n";
     return os.str();
 }
-} // namespace viewer
+} // namespace ecm_ovstage

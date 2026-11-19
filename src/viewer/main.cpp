@@ -2,7 +2,6 @@
 #include <windows.h>
 #define GLFW_INCLUDE_NONE
 #include "Camera.h"
-#include "EcmOverlay.h"
 #include "FileDialog.h"
 #include "RtxView.h"
 #include "imgui.h"
@@ -11,6 +10,7 @@
 #include "viewer_imgui_widgets.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
+#include <ecm_ovstage/EcmOverlay.h>
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -356,7 +356,7 @@ int run(const Options &options)
     // Explicit corridor map.
     ecm::BuildSettings ecmSettings;
     std::optional<ecm::Map> ecmMap;
-    viewer::EcmDisplay ecmDisplay;
+    ecm_ovstage::EcmDisplay ecmDisplay;
     if (options.lineWidth > 0)
         ecmDisplay.lineWidth = options.lineWidth;
     std::string ecmInfo;
@@ -581,6 +581,11 @@ int run(const Options &options)
                 withBusyDialog(window.handle, "Creating ECM", [&](const Status &status) {
                     status("Extracting scene triangles...");
                     auto triangles = rtx.extractTriangles();
+                    std::printf("Stage geometry: %zu meshes, %zu shapes, %zu instances, %zu hidden, %zu triangles, "
+                                "%s-up, %g m/unit\n",
+                                triangles.meshes, triangles.primitives, triangles.instances, triangles.hidden,
+                                triangles.mesh.indices.size() / 3, triangles.zUp ? "Z" : "Y",
+                                triangles.metersPerUnit);
                     auto settings = ecmSettings;
                     settings.up = triangles.zUp ? ecm::UpAxis::Z : ecm::UpAxis::Y;
                     settings.metersPerUnit = triangles.metersPerUnit;
@@ -588,7 +593,7 @@ int run(const Options &options)
                            " triangles...");
                     built = ecm::build(triangles.mesh, settings);
                     status("Updating the overlay...");
-                    rtx.setOverlay(viewer::ecmOverlayLayer(*built, ecmDisplay, rtx.overlayRoot()));
+                    rtx.setOverlay(ecm_ovstage::ecmOverlayLayer(*built, ecmDisplay, rtx.overlayRoot()));
                 });
                 ecmMap = std::move(built);
                 const auto &s = ecmMap->stats;
@@ -619,7 +624,7 @@ int run(const Options &options)
             clearEcm = updateOverlay = false;
             try
             {
-                rtx.setOverlay(ecmMap ? viewer::ecmOverlayLayer(*ecmMap, ecmDisplay, rtx.overlayRoot()) : "");
+                rtx.setOverlay(ecmMap ? ecm_ovstage::ecmOverlayLayer(*ecmMap, ecmDisplay, rtx.overlayRoot()) : "");
             }
             catch (const std::exception &e)
             {
