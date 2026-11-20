@@ -147,16 +147,16 @@ void pillar()
     expect(map.boundary.size() == 2, "outer boundary and pillar hole");
 }
 
-void table(double agentHeight, std::size_t expectedCycles)
+void table(double actorHeight, std::size_t expectedCycles)
 {
     Scene scene;
     scene.floor(0, 0, 10, 10);
     scene.box(4, 4, 0.75, 6, 6, 0.8);
     ecm::BuildSettings settings;
     settings.up = ecm::UpAxis::Z;
-    settings.agentHeight = agentHeight;
-    const auto map = run(("table, agent height " + std::to_string(agentHeight)).c_str(), scene, settings);
-    expect(cycles(map) == expectedCycles, "table blocks only agents taller than the gap");
+    settings.actorHeight = actorHeight;
+    const auto map = run(("table, actor height " + std::to_string(actorHeight)).c_str(), scene, settings);
+    expect(cycles(map) == expectedCycles, "table blocks only actors taller than the gap");
 }
 
 void step(double boxHeight, std::size_t expectedCycles)

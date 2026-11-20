@@ -426,15 +426,15 @@ int run(const Options &options)
                 value = v;
                 return true;
             };
-            if (parameter("Agent radius (m)", ecmSettings.agentRadius, 0.05f, 2) && ecmMap)
+            if (parameter("Actor radius (m)", ecmSettings.actorRadius, 0.05f, 2) && ecmMap)
             {
                 // The map itself is radius independent; only the display of narrow parts changes.
-                ecmMap->settings.agentRadius = ecmSettings.agentRadius;
+                ecmMap->settings.actorRadius = ecmSettings.actorRadius;
                 updateOverlay = true;
             }
             if (ImGui::IsItemHovered())
                 ImGui::SetTooltip("Corridors narrower than this are drawn red or hidden. Applies immediately.");
-            parameter("Agent height (m)", ecmSettings.agentHeight, 0.1f, 2);
+            parameter("Actor height (m)", ecmSettings.actorHeight, 0.1f, 2);
             parameter("Max slope (deg)", ecmSettings.maxSlopeDegrees, 1, 1);
             parameter("Max step (m)", ecmSettings.maxStepHeight, 0.05f, 2);
             if (ImGui::CollapsingHeader("Advanced"))
@@ -451,7 +451,7 @@ int run(const Options &options)
                 ImGui::TextWrapped("%s", ecmInfo.c_str());
                 updateOverlay |= ImGui::Checkbox("Medial axis", &ecmDisplay.medialAxis);
                 updateOverlay |= ImGui::Checkbox("Color by clearance", &ecmDisplay.clearanceColors);
-                updateOverlay |= ImGui::Checkbox("Show narrower than agent", &ecmDisplay.narrow);
+                updateOverlay |= ImGui::Checkbox("Show narrower than actor", &ecmDisplay.narrow);
                 updateOverlay |= ImGui::Checkbox("Closest-point spokes", &ecmDisplay.spokes);
                 updateOverlay |= ImGui::Checkbox("Free-space boundary", &ecmDisplay.boundary);
                 ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x * 0.45f);

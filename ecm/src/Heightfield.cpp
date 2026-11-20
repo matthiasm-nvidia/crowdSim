@@ -254,10 +254,10 @@ FloorGrid buildFloor(const std::vector<Vec3> &vertices, const std::vector<uint32
     constexpr float open = std::numeric_limits<float>::infinity();
     const auto ceiling = [&](int32_t s) { return field.spans[s].next == -1 ? open : field.spans[field.spans[s].next].lo; };
     const auto standable = [&](int32_t s) {
-        return field.spans[s].walkable && ceiling(s) - field.spans[s].hi >= settings.agentHeight;
+        return field.spans[s].walkable && ceiling(s) - field.spans[s].hi >= settings.actorHeight;
     };
     // Flood fill 4-connected surfaces whose heights differ by at most a step and whose shared
-    // opening fits the agent. The largest region is the floor.
+    // opening fits the actor. The largest region is the floor.
     std::vector<int32_t> region(field.spans.size(), -1);
     std::vector<std::size_t> regionSize;
     std::vector<std::pair<int32_t, int32_t>> queue; // (column, span)
@@ -290,7 +290,7 @@ FloorGrid buildFloor(const std::vector<Vec3> &vertices, const std::vector<uint32
                             continue;
                         const float floorB = field.spans[b].hi;
                         if (std::abs(floorB - floorA) > settings.maxStep ||
-                            std::min(ceilA, ceiling(b)) - std::max(floorA, floorB) < settings.agentHeight)
+                            std::min(ceilA, ceiling(b)) - std::max(floorA, floorB) < settings.actorHeight)
                             continue;
                         region[b] = id;
                         queue.push_back({nc, b});

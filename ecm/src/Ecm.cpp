@@ -29,8 +29,8 @@ Vec3 fromPlane(double u, double v, double h, UpAxis up)
 void validate(const BuildSettings &s)
 {
     const auto positive = [](double value) { return std::isfinite(value) && value > 0; };
-    if (!positive(s.agentRadius) || !positive(s.agentHeight) || !positive(s.cellSize) || !positive(s.metersPerUnit))
-        throw std::invalid_argument("Agent radius, height, cell size and meters per unit must be positive.");
+    if (!positive(s.actorRadius) || !positive(s.actorHeight) || !positive(s.cellSize) || !positive(s.metersPerUnit))
+        throw std::invalid_argument("Actor radius, height, cell size and meters per unit must be positive.");
     if (!std::isfinite(s.maxStepHeight) || s.maxStepHeight < 0)
         throw std::invalid_argument("Maximum step height must be zero or positive.");
     if (!(s.maxSlopeDegrees > 0 && s.maxSlopeDegrees < 90))
@@ -58,7 +58,7 @@ Map build(const TriangleMesh &mesh, const BuildSettings &settings)
     const double units = 1 / settings.metersPerUnit; // stage units per meter
     detail::FloorSettings floorSettings;
     floorSettings.cellSize = settings.cellSize * units;
-    floorSettings.agentHeight = settings.agentHeight * units;
+    floorSettings.actorHeight = settings.actorHeight * units;
     floorSettings.maxStep = settings.maxStepHeight * units;
     floorSettings.cosMaxSlope = std::cos(settings.maxSlopeDegrees * 3.14159265358979323846 / 180);
     floorSettings.maxCells = settings.maxCells;

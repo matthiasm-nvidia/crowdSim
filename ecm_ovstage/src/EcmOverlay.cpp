@@ -15,7 +15,7 @@ Color narrowColor()
 {
     return {0.9f, 0.12f, 0.1f};
 }
-// Yellow at the agent radius through green and cyan to blue at eight times the radius.
+// Yellow at the actor radius through green and cyan to blue at eight times the radius.
 Color clearanceColor(double clearance, double radius)
 {
     if (clearance < radius)
@@ -87,7 +87,7 @@ std::string ecmOverlayLayer(const ecm::Map &map, const EcmDisplay &display, cons
 {
     const auto &settings = map.settings;
     const double units = 1 / settings.metersPerUnit;
-    const double radius = settings.agentRadius;
+    const double radius = settings.actorRadius;
     // Lift lines a few centimeters so they do not z-fight with the floor.
     const double lift = 0.03 * units;
     const auto lifted = [&](ecm::Vec3 p) {
@@ -117,7 +117,7 @@ std::string ecmOverlayLayer(const ecm::Map &map, const EcmDisplay &display, cons
                 const bool wide = display.narrow || s.clearance >= radius;
                 if (i && !display.narrow)
                 {
-                    // Cut the curve exactly where the clearance crosses the agent radius.
+                    // Cut the curve exactly where the clearance crosses the actor radius.
                     const auto &prev = edge.samples[i - 1];
                     const bool prevWide = prev.clearance >= radius;
                     if (wide != prevWide)

@@ -10,7 +10,7 @@ namespace ecm::detail
 struct FloorSettings
 {
     double cellSize = 0;    // stage units
-    double agentHeight = 0; // stage units
+    double actorHeight = 0; // stage units
     double maxStep = 0;     // stage units
     double cosMaxSlope = 0;
     std::size_t maxCells = 0;

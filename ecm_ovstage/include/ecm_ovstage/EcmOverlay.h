@@ -8,7 +8,7 @@ struct EcmDisplay
 {
     bool medialAxis = true;
     bool clearanceColors = true; // otherwise one color
-    bool narrow = false;         // also draw parts with clearance below the agent radius
+    bool narrow = false;         // also draw parts with clearance below the actor radius
     bool spokes = false;         // closest obstacle points at every Voronoi vertex
     bool boundary = true;        // free-space boundary
     float lineWidth = 0.1f;      // meters

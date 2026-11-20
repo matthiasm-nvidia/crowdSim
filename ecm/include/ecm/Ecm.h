@@ -30,9 +30,9 @@ struct TriangleMesh
 
 struct BuildSettings
 {
-    // Agent parameters, in meters / degrees.
-    double agentRadius = 0.3;
-    double agentHeight = 1.8;
+    // Actor parameters, in meters / degrees.
+    double actorRadius = 0.3;
+    double actorHeight = 1.8;
     double maxSlopeDegrees = 45;
     double maxStepHeight = 0.4;
     // Horizontal voxel size in meters. Grows automatically when the grid would exceed maxCells.
